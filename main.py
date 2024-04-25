@@ -43,7 +43,7 @@ async def set_age_by_anketa_handler(msg: Message, state: FSMContext):
     try:
         await state.update_data(age=int(msg.text))
     except ValueError:
-        await msg.answer('Вы не ыерно ввели возраст!')
+        await msg.answer('Вы не верно ввели возраст!')
         markup = InlineKeyboardMarkup(inline_keyboard=[[
             InlineKeyboardButton(text='Назад', callback_data='back_anketa'),
             InlineKeyboardButton(text='Отмена', callback_data='cancel_anketa'),]])
@@ -94,7 +94,9 @@ async def start_handler(msg: Message):
     await bot.set_my_commands([ 
         BotCommand(command='start', description='Запуск бота'), 
         BotCommand(command='set_time', description='Задать время рассылки'), 
-        BotCommand(command='help', description='Справка') 
+        BotCommand(command='help', description='Справка'),
+        BotCommand(command='anketa', description='Анкета')
+
     ])
     
     inline_markup = InlineKeyboardMarkup(inline_keyboard = [
@@ -111,12 +113,6 @@ async def next_handler(callback_query: CallbackQuery):
     await callback_query.message.edit_text(text="страница 2", reply_markup=inline_markup)
 
 
-
-    inline_markup = InlineKeyboardMarkup(inline_keyboard = [
-            [InlineKeyboardButton(text='назад', callback_data='back')]
-            ])
-    await callback_query.answer(text="страница 1", reply_markup=inline_markup) 
- 
 @router.callback_query(F.data == "back")
 async def next_handler(callback_query: CallbackQuery):
     inline_markup = InlineKeyboardMarkup(inline_keyboard = [
@@ -124,9 +120,6 @@ async def next_handler(callback_query: CallbackQuery):
          ])
     
     await callback_query.message.edit_text(text="страница 1", reply_markup=inline_markup)
-
-
-
 
 @router.callback_query()
 async def callback_query_handler(callback_query: CallbackQuery):
@@ -139,7 +132,7 @@ async def start_handler(msg: Message):
 @router.message(Command("set_time")) 
 async def start_handler(msg: Message): 
     await msg.answer(text="Выберите время в формате ЧЧ:ММ для рассылки картинок") 
- 
+
 async def main(): 
     await dp.start_polling(bot) 
  
