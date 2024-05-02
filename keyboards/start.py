@@ -1,3 +1,4 @@
+"""используем from для импорта aiogram """
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 

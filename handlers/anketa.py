@@ -1,27 +1,31 @@
+"""используем from для импорта aiogram """
 from aiogram import Router, F
 from aiogram.filters import Command
-from aiogram.types import BotCommand, Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from states.anketa import Anketa
-from keyboards.anketa import *
+from keyboards.anketa import kb_anketa_cancel, kb_anketa_cancel_and_back, kb_anketa_by_gender
 
 router = Router()
 
 
 @router.message(Command("anketa"))
 async def anketa_handler(msg: Message, state: FSMContext):
+    """мы используем async def для определения функции"""
     await state.set_state(Anketa.name)
     await msg.answer("Введите Ваше имя", reply_markup=kb_anketa_cancel)
 
 
 @router.callback_query(F.data == 'cancel_anketa')
 async def cancel_handler(callback_query: CallbackQuery, state: FSMContext):
+    """мы используем async def для определения функции"""
     await state.clear()
     await callback_query.message.answer('Регистрация отменена')
 
 
 @router.message(Anketa.name)
 async def set_name_by_anketa_handler(msg: Message, state: FSMContext):
+    """мы используем async def для определения функции"""
     await state.update_data(name=msg.text)
     await state.set_state(Anketa.age)
     await msg.answer('Введите Ваш возраст', reply_markup=kb_anketa_cancel_and_back)
@@ -29,10 +33,12 @@ async def set_name_by_anketa_handler(msg: Message, state: FSMContext):
 
 @router.callback_query(F.data == 'back_anketa')
 async def back_anketa_handler(callback_query: CallbackQuery, state: FSMContext):
+    """мы используем async def для определения функции"""
     current_state = await state.get_state()
     if current_state == Anketa.gender:
         await state.set_state(Anketa.age)
-        await callback_query.message.answer('Введите Ваш возраст', reply_markup=kb_anketa_cancel_and_back)
+        await callback_query.message.answer('Введите Ваш возраст',
+                                            reply_markup=kb_anketa_cancel_and_back)
     elif current_state == Anketa.age:
         await state.set_state(Anketa.name)
 
@@ -41,6 +47,7 @@ async def back_anketa_handler(callback_query: CallbackQuery, state: FSMContext):
 
 @router.message(Anketa.age)
 async def set_age_by_anketa_handler(msg: Message, state: FSMContext):
+    """мы используем async def для определения функции"""
     try:
         await state.update_data(age=int(msg.text))
     except ValueError:
@@ -54,6 +61,7 @@ async def set_age_by_anketa_handler(msg: Message, state: FSMContext):
 
 @router.callback_query(F.data.startswith('gender_') and Anketa.gender)
 async def set_age_anketa_handler(callback_query: CallbackQuery, state: FSMContext):
+    """мы используем async def для определения функции"""
     gender = {'gender_m': 'Мужской', 'gender_w': 'Женский'}[
         callback_query.data]
     await state.update_data(gender=gender)
@@ -62,5 +70,6 @@ async def set_age_anketa_handler(callback_query: CallbackQuery, state: FSMContex
 
 
 @router.message(Anketa.gender)
-async def set_age_by_anketa_handker(msg: Message, state: FSMContext):
+async def set_age_by_anketa_handker(msg: Message):
+    """мы используем async def для определения функции"""
     await msg.answer('Нужно пол выбрать кнопкой')
