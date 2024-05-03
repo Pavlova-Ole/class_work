@@ -1,6 +1,5 @@
 """используем import для asyncio """
 import asyncio
-
 from aiogram import Bot, Dispatcher
 from handlers import include_routers
 
@@ -9,7 +8,7 @@ dp = Dispatcher()
 
 
 async def main():
-    """мы используем async def для определения функции"""
+    """определяем функцию"""
     include_routers(dp)
     await dp.start_polling(bot)
 

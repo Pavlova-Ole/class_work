@@ -4,7 +4,7 @@ from handlers import anketa, start
 
 
 def include_routers(dp: Dispatcher):
-    """мы используем def для определения функции"""
+    """определяем функцию"""
     dp.include_routers(
         start.router,
         anketa.router
