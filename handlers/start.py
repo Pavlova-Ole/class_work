@@ -3,6 +3,7 @@ from aiogram import Router, F
 from aiogram.filters import Command
 from aiogram.types import BotCommand, Message, CallbackQuery
 from keyboards.start import kb_start_next, kb_start_back
+from models import User
 router = Router()
 
 
@@ -14,6 +15,7 @@ async def start_handler(msg: Message):
         BotCommand(command='set_time', description='Задать время рассылки'),
         BotCommand(command='help', description='Справка'),
         BotCommand(command='anketa', description='Анкета')])
+    #user = User.get_or_create(tg_user=msg.)
     await msg.answer(text="страница 1", reply_markup=kb_start_next)
 
 
@@ -36,7 +38,3 @@ async def start_first_handler(msg: Message):
     await msg.answer(text="Крч ребята если бот лег то звонить павлОвой (+79109245056)")
 
 
-@router.message(Command("set_time"))
-async def start_second_handler(msg: Message):
-    """мы используем async def для определения функции"""
-    await msg.answer(text="Выберите время в формате чч:мм для рассылки картинок")

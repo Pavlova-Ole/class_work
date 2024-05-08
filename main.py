@@ -7,28 +7,29 @@ from models import User
 
 bot = Bot(token="7173826357:AAFWJEthXIVu94kLaZwrQjECv2_mOjB8MPQ")
 dp = Dispatcher()
-
     
 
 async def get_time_notify():
     now = datetime.now()
-    return (User.filter(User.time > now).order_by(User.time.asc()).first()).time
+    users = User.filter(User.time > now).order_by(User.time.asc())
+    if users.count() > 0:
+        return (users.first()).time 
 
 async def send_admin():
-    send_time = await get_time_notify()
-    send_time = time(send_time.hour, send_time.minute)
+    global SEND_TIME
+    SEND_TIME = await get_time_notify()
     await bot.send_message(976297325, "Бот запущен!")
     while True:
-        print(datetime.now().time(), send_time)
+        print(datetime.now().time(), SEND_TIME)
         now_time = datetime.now().time()
         now_time = time(now_time.hour, now_time.minute)
-        if send_time == now_time:
+        if SEND_TIME and SEND_TIME == now_time:
             # рассылка уведомлений всем пользователям
-            for user in User.filter(time=send_time):
-                await bot.send_message(user.tg_user, 'ping')
+            for user in User.filter(time=SEND_TIME):
+                await bot.send_message(user.tg_user, 'чири чири')
 
-            send_time = await get_time_notify()
-            print(send_time)
+            SEND_TIME = await get_time_notify()
+            print(SEND_TIME)   
 
                
         now_time = (datetime.now() + timedelta(minutes=1))
@@ -37,6 +38,9 @@ async def send_admin():
         seconds = (now_time - datetime.now()).seconds + 1
         print(datetime.now().time(), now_time.time(), seconds)
         await asyncio.sleep(seconds)
+
+async def on_startup():
+    asyncio.create_task(send_admin())
 
 async def main():
     '''Старт бота'''

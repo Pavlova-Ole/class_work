@@ -1,4 +1,4 @@
-from peewee import SqliteDatabase, Model, ForeignKeyField, TextField, TimeField
+from peewee import SqliteDatabase, Model, ForeignKeyField, TextField, TimeField, IntegerField
  
 db = SqliteDatabase('sqlite.db') 
  
@@ -9,8 +9,8 @@ class DB(Model):
  
  
 class User(DB): 
-    tg_user = TextField() 
-    time = TimeField()
+    tg_user = IntegerField()
+    time = TimeField(null=True)
  
  
 class Image(DB): 
